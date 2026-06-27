@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ергенско 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --card: #141414;
+    --border: #2a2a2a;
+    --red: #c0392b;
+    --red-light: #e74c3c;
+    --red-glow: rgba(192,57,43,0.15);
+    --white: #f0ede8;
+    --muted: #777;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 40px 24px;
+    text-align: center;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 50% 40%, var(--red-glow) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(58px, 15vw, 120px);
+    line-height: 0.9;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--white);
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.2s;
+    white-space: nowrap;
+  }
+
+  .hero-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: clamp(18px, 5vw, 36px);
+    letter-spacing: 0.22em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    margin-top: 12px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease forwards 0.35s;
+  }
+
+  .hero-subtitle .red { color: var(--red-light); }
+  .hero-subtitle .white { color: var(--white); }
+
+  .hero-divider {
+    width: 48px;
+    height: 2px;
+    background: var(--red);
+    margin: 32px auto;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 0.7s;
+  }
+
+  .hero-name {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.85s;
+  }
+
+  .hero-name strong {
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    animation: fadeIn 1s ease forwards 1.4s;
+  }
+
+  .scroll-hint span {
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .scroll-arrow {
+    width: 16px;
+    height: 16px;
+    border-right: 1.5px solid var(--red);
+    border-bottom: 1.5px solid var(--red);
+    transform: rotate(45deg);
+    animation: bounce 2s ease infinite;
+  }
+
+  /* CONTENT */
+  .content {
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* DETAILS CARD */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+    margin-bottom: 16px;
+  }
+
+  .card-label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--red-light);
+    margin-bottom: 22px;
+  }
+
+  .detail-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .detail-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .detail-row:first-of-type { padding-top: 0; }
+
+  .detail-icon {
+    font-size: 17px;
+    width: 22px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .detail-key {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+
+  .detail-val {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--white);
+    line-height: 1.5;
+  }
+
+  .detail-sub {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  /* CALENDAR */
+  .calendar-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+    margin-bottom: 16px;
+  }
+
+  .cal-label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--red-light);
+    margin-bottom: 22px;
+  }
+
+  .cal-month {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+
+  .cal-day-name {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+    padding-bottom: 8px;
+  }
+
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--muted);
+    border-radius: 8px;
+  }
+
+  .cal-day.active {
+    background: var(--red);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  .cal-day.active-start {
+    background: var(--red);
+    color: #fff;
+    font-weight: 600;
+    border-radius: 8px 8px 8px 8px;
+  }
+
+  .cal-day.active-mid {
+    background: rgba(192,57,43,0.35);
+    color: var(--white);
+    border-radius: 0;
+  }
+
+  .cal-day.active-end {
+    background: var(--red);
+    color: #fff;
+    font-weight: 600;
+    border-radius: 8px 8px 8px 8px;
+  }
+
+  .cal-day.today {
+    color: var(--white);
+  }
+
+  .cal-day.empty { opacity: 0; pointer-events: none; }
+
+  /* BUTTONS */
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 18px 24px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+
+  .btn-red {
+    background: var(--red);
+    color: #fff;
+    border: none;
+  }
+
+  .btn-red:hover {
+    background: var(--red-light);
+    transform: translateY(-1px);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--white);
+    border: 1px solid var(--border);
+  }
+
+  .btn-outline:hover {
+    border-color: var(--red);
+    color: var(--red-light);
+    transform: translateY(-1px);
+  }
+
+  .btn-icon { font-size: 15px; }
+
+  /* DEADLINE NOTE */
+  .deadline-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.8;
+    padding: 22px 24px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .deadline-note strong { color: var(--white); font-weight: 500; }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: rotate(45deg) translateY(0); }
+    50%       { transform: rotate(45deg) translateY(6px); }
+  }
+
+  @media (max-width: 480px) {
+    .card, .calendar-card { padding: 22px; }
+    .cal-day { font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <h1 class="hero-title">ЕРГЕНСКО</h1>
+  <p class="hero-subtitle"><span class="red">НА</span> <span class="white">ДЕЙВИД ИВАНОВ</span></p>
+  <div class="hero-divider"></div>
+  <p class="hero-name">Организирано от <strong>Виктор Манов</strong> · Кум</p>
+  <div class="scroll-hint">
+    <span>Детайли</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<div class="content">
+
+  <!-- DETAILS -->
+  <div class="card">
+    <p class="card-label">Детайли</p>
+
+    <div class="detail-row">
+      <span class="detail-icon">📅</span>
+      <div style="flex:1">
+        <p class="detail-key">Дати</p>
+        <p class="detail-val">11 – 13 септември 2026<br><span class="detail-sub">Две нощувки</span></p>
+        <div style="margin-top:18px;">
+          <div class="cal-grid">
+            <div class="cal-day-name">Пн</div>
+            <div class="cal-day-name">Вт</div>
+            <div class="cal-day-name">Ср</div>
+            <div class="cal-day-name">Чт</div>
+            <div class="cal-day-name">Пт</div>
+            <div class="cal-day-name">Сб</div>
+            <div class="cal-day-name">Нд</div>
+            <div class="cal-day empty"></div>
+            <div class="cal-day">1</div>
+            <div class="cal-day">2</div>
+            <div class="cal-day">3</div>
+            <div class="cal-day">4</div>
+            <div class="cal-day">5</div>
+            <div class="cal-day">6</div>
+            <div class="cal-day">7</div>
+            <div class="cal-day">8</div>
+            <div class="cal-day">9</div>
+            <div class="cal-day">10</div>
+            <div class="cal-day active-start">11</div>
+            <div class="cal-day active-mid">12</div>
+            <div class="cal-day active-end">13</div>
+            <div class="cal-day">14</div>
+            <div class="cal-day">15</div>
+            <div class="cal-day">16</div>
+            <div class="cal-day">17</div>
+            <div class="cal-day">18</div>
+            <div class="cal-day">19</div>
+            <div class="cal-day">20</div>
+            <div class="cal-day">21</div>
+            <div class="cal-day">22</div>
+            <div class="cal-day">23</div>
+            <div class="cal-day">24</div>
+            <div class="cal-day">25</div>
+            <div class="cal-day">26</div>
+            <div class="cal-day">27</div>
+            <div class="cal-day">28</div>
+            <div class="cal-day">29</div>
+            <div class="cal-day">30</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-icon">📍</span>
+      <div>
+        <p class="detail-key">Локация</p>
+        <p class="detail-val">Вила за гости Маневи<br><span class="detail-sub">с. Яворница</span></p>
+      </div>
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-icon">💰</span>
+      <div>
+        <p class="detail-key">Участие</p>
+        <p class="detail-val">120€ на човек<br><span class="detail-sub">Срок за плащане: <strong style="color:var(--red-light)">31.07.2026</strong></span><br><span class="detail-sub" style="margin-top:8px;display:block;border-top:1px solid var(--border);padding-top:8px;">🏡 Вила — 1200€</span><span class="detail-sub">🍖🍺 Храна & алкохол за двата дни — остатъкът</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="btn-group">
+    <a href="https://maps.app.goo.gl/pczWnuxzpUWuSP2Y8" target="_blank" class="btn btn-outline">
+      <span class="btn-icon">📍</span> Локация
+    </a>
+    <a href="https://revolut.me/viktorxnbb" target="_blank" class="btn btn-red">
+      <span class="btn-icon">💳</span> Участвай
+    </a>
+  </div>
+
+</div>
+
+<div class="footer">
+  Ергенско 2026 · с. Яворница · 11–13 септември
+</div>
+
+</body>
+</html>
